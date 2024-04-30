@@ -1,0 +1,5 @@
+90:60:1:/Images/shawdow3.png
+630:60:1:/Images/shawdow3.png
+90:510:1:/Images/shawdow3.png
+630:510:1:/Images/shawdow3.png
+360:297:1:/Images/shawdow4.png
