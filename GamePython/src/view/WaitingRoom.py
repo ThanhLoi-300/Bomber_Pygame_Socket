@@ -3,7 +3,6 @@ import json
 import pygame
 import socket
 import threading
-
 from src.view.EnterGame import EnterGame
 
 

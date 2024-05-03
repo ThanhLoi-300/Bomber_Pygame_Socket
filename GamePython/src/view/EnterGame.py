@@ -52,10 +52,10 @@ class EnterGame:
 
         if self.typeActor == 1:
             self.imgName = "bebong_down"
-            self.mBomber = Actor(60, 350, Actor.BOMBER, Actor.DOWN, 5, 1, 1, self.imgName, self.name)
+            self.mBomber = Actor(60, 350, Actor.BOMBER, Actor.DOWN, 5, 1, 1, self.imgName, self.name, 3)
         else:
             self.imgName = "khokho_down"
-            self.mBomber = Actor(680, 350, Actor.BOMBER, Actor.DOWN, 5, 1, 1, self.imgName, self.name)
+            self.mBomber = Actor(680, 350, Actor.BOMBER, Actor.DOWN, 5, 1, 1, self.imgName, self.name, 3)
 
         self.other = None
 
@@ -105,8 +105,9 @@ class EnterGame:
                         self.press_w = False
                     elif event.key == K_SPACE:
                         # Xử lý sự kiện nhấn phím "space"
-                        self.innitBomb()
-                        self.mBomber.run_bomb = Actor.ALLOW_RUN
+                        if self.mBomber.status == Actor.ALIVE:
+                            self.innitBomb()
+                            self.mBomber.run_bomb = Actor.ALLOW_RUN
 
             self.draw()
             self.mBomber.draw_actor(self.screen)
@@ -140,7 +141,7 @@ class EnterGame:
                     with self.lock:
                         self.other = Actor(data["x"], data["y"], data["type"], data["orient"], data["speed"],
                                            data["sizeBomb"],
-                                           data["quantity_bomb"], data["img"], data["name"])
+                                           data["quantity_bomb"], data["img"], data["name"], data["heart"])
                 if "send_data_item" in data:
                     with self.lock:
                         for item in self.arrItem:
@@ -168,7 +169,8 @@ class EnterGame:
                 "sizeBomb": self.mBomber.sizeBomb,
                 "quantity_bomb": self.mBomber.quantity_bomb,
                 "img": self.mBomber.img,
-                "name": self.mBomber.name
+                "name": self.mBomber.name,
+                "heart": self.mBomber.heart
             }
 
             self.client_socket.send(json.dumps(data).encode())
@@ -351,6 +353,11 @@ class EnterGame:
             self.arrBombBang[k].deadlineBomb()
 
             if self.arrBombBang[k].timeLine == 0:
+                for i in range(len(self.arrBombBang)):
+                    if self.arrBombBang[i].isImpactBombBangVsActor(self.mBomber):
+                        if self.mBomber.heart > 0:
+                            self.mBomber.heart -= 1
+
                 self.arrBombBang.pop(k)
                 break
 
@@ -367,17 +374,15 @@ class EnterGame:
                     break
 
     def check_dead(self):
-        if self.mBomber.status == Actor.DEAD:
+        if self.mBomber.heart == 0:
+            if self.imgName == "bebong_down":
+                self.mBomber.img = "bebong_dead"
+            else:
+                self.mBomber.img = "khokho_dead"
+
+            self.mBomber.status = Actor.DEAD
+
             self.client_socket.send("END_GAME".encode())
+            self.send_data()
             self.dialog_text = self.font.render("You Lose", True, (255, 0, 0))
             self.showDialog = True
-            return
-
-        for i in range(len(self.arrBombBang)):
-            if self.arrBombBang[i].isImpactBombBangVsActor(self.mBomber) and self.mBomber.status == Actor.ALIVE:
-                if self.imgName == "bebong_down":
-                    self.mBomber.img = "bebong_dead"
-                else:
-                    self.mBomber.img = "khokho_dead"
-
-                self.mBomber.status = Actor.DEAD

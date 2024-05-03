@@ -15,7 +15,7 @@ class Actor:
     ALLOW_RUN = 0
     DISALLOW_RUN = 1
 
-    def __init__(self, x, y, actor_type, orient, speed, sizebomb, quantityBomb, imgName, name):
+    def __init__(self, x, y, actor_type, orient, speed, sizebomb, quantityBomb, imgName, name, heart):
         self.sizeBomb = sizebomb
         self.quantity_bomb = quantityBomb
         self.x = x
@@ -29,6 +29,7 @@ class Actor:
         self.height = pygame.image.load("../Images/" + self.img + ".png").get_height() - 11
         self.status = self.ALIVE
         self.name = name
+        self.heart = heart
 
         # Tạo font cho tên
         self.font = pygame.font.Font(None, 24)  # Thay đổi None và 24 để tùy chỉnh font và kích thước
@@ -43,6 +44,15 @@ class Actor:
         text_rect = text_surface.get_rect()
         text_rect.midtop = (self.x + self.width // 2, self.y - 30)
         screen.blit(text_surface, text_rect)
+
+        # Vẽ heart
+        if self.heart > 0:
+            heart = pygame.image.load("../Images/heart_1.png")
+            for i in range(self.heart):
+                space = i * heart.get_width() - 20
+                heart_react = heart.get_rect()
+                heart_react.midtop = (self.x + self.width // 2 + space, self.y - 50)
+                screen.blit(heart, heart_react)
 
     def is_impact_bomber_vs_actor(self, actor):
         if self.status == self.DEAD:

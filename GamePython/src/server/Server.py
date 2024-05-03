@@ -124,7 +124,8 @@ class Server:
                         "sizeBomb": request["sizeBomb"],
                         "quantity_bomb": request["quantity_bomb"],
                         "img": request["img"],
-                        "name": request["name"]
+                        "name": request["name"],
+                        "heart": request["heart"]
                     }
 
                     json_data = json.dumps(data)
