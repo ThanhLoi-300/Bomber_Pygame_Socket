@@ -32,6 +32,7 @@ class Actor:
         self.heart = heart
 
         # Tạo font cho tên
+        pygame.font.init()
         self.font = pygame.font.Font(None, 24)  # Thay đổi None và 24 để tùy chỉnh font và kích thước
 
     def draw_actor(self, screen):

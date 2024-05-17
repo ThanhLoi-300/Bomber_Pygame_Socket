@@ -129,6 +129,7 @@ class EnterGame:
         while True:
             try:
                 response = self.client_socket.recv(1024).decode()
+                print("response:"+response)
                 data = json.loads(response)
 
                 # Kiểm tra phản hồi từ server

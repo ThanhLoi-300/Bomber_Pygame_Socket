@@ -11,7 +11,7 @@ class Server:
         self.lock = threading.Lock()
 
     def start(self):
-        self.server_socket.bind(('localhost', 8080))
+        self.server_socket.bind(('192.168.51.242', 8080))
         self.server_socket.listen()
         print('Waiting for connections...')
         self.running = True
@@ -38,7 +38,7 @@ class Server:
                     json_data = json.dumps(data)
                     for client in self.client_sockets.values():
                         if client != client_socket:
-                            client.send(json_data.encode())
+                         client.send(json_data.encode())
 
                 if "send_bomb" in request:
                     request = json.loads(request)
@@ -139,7 +139,7 @@ class Server:
                 #     if socket == client_socket:
                 #         self.client_sockets.pop(name)
                 #         break
-                break
+                pass
 
     def stop(self):
         self.running = False

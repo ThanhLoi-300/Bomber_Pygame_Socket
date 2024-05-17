@@ -8,7 +8,7 @@ from src.view.WaitingRoom import WaitingRoom
 import socket
 import threading
 
-HOST = 'localhost'  # Địa chỉ IP của máy chủ
+HOST = '192.168.51.242'  # Địa chỉ IP của máy chủ
 PORT = 8080  # Số cổng để kết nối
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
